@@ -6,6 +6,7 @@ export interface ChatMessage {
   sender: "X" | "0";
   text: string;
   timestamp: number;
+  time: string;
 }
 
 interface ChatState {
@@ -20,23 +21,15 @@ const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    sendMessage: (
-      state,
-      action: PayloadAction<{ sender: "X" | "0"; text: string }>
-    ) => {
-      const newMessage: ChatMessage = {
-        sender: action.payload.sender,
-        text: action.payload.text,
-        timestamp: Date.now(),
-        id: crypto.randomUUID(),
-      };
-      state.messages.push(newMessage);
+    addMessage: (state, action: PayloadAction<ChatMessage>) => {
+      state.messages.push(action.payload);
     },
     clearChat: (state) => {
       state.messages = [];
     },
+    resetChat: () => ({ messages: [] }),
   },
 });
 
-export const { sendMessage, clearChat } = chatSlice.actions;
+export const { addMessage, clearChat, resetChat } = chatSlice.actions;
 export default chatSlice.reducer;
